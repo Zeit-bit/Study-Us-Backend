@@ -18,6 +18,7 @@ app.post('/users', async (req, res) => {
   const user = users.find((user) => user.email === userData.email)
   if (user) return res.json({ error: 'correo electronico ya en uso' })
   users.push(userData)
+  res.json({ msg: 'Creado exitosamente' })
 })
 
 app.post('/login', async (req, res) => {
