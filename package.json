@@ -1,0 +1,31 @@
+{
+  "name": "study-us-backend",
+  "version": "1.0.0",
+  "description": "Backend del proyecto “Study-Us”, una plataforma para gestionar tareas, hábitos y gamificar la experie",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zeit-bit/Study-Us-Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Zeit-bit/Study-Us-Backend/issues"
+  },
+  "homepage": "https://github.com/Zeit-bit/Study-Us-Backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mongoose": "^8.14.1",
+    "standard": "^17.1.2"
+  },
+  "eslintConfig": {
+    "extends": ["standard"]
+  }
+}
