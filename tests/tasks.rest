@@ -1,0 +1,14 @@
+### Get all Tasks
+GET http://localhost:3000/api/tasks
+
+### Post a task
+POST http://localhost:3000/api/tasks
+content-type: application/json
+
+{
+    "userId": "6817d5a5537a6c2838199f58",
+    "title": "Crear Tests para TDD del proyecto"
+}
+
+### Get all notes from a userId
+GET http://localhost:3000/api/tasks/6817d5a5537a6c2838199f58
