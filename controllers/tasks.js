@@ -1,6 +1,15 @@
 import { Router } from 'express'
 import Task from '../models/task.js'
 import User from '../models/user.js'
+import jwt from 'jsonwebtoken'
+
+const GetTokenFrom = (req) => {
+  const authorization = req.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '')
+  }
+  return null
+}
 
 const tasksRouter = Router()
 
@@ -19,8 +28,12 @@ tasksRouter.get('/:id', async (req, res) => {
 
 // Post a task
 tasksRouter.post('/', async (req, res) => {
-  const { title, description, userId, date } = req.body
-  const user = await User.findById(userId)
+  const { title, description, date } = req.body
+  const decodedToken = jwt.verify(GetTokenFrom(req), process.env.SECRET)
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'token invalido' })
+  }
+  const user = await User.findById(decodedToken.id)
   const task = new Task({
     userId: user._id,
     date,
