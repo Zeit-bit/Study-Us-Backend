@@ -6,29 +6,26 @@ import User from '../models/user.js'
 const loginRouter = Router()
 
 loginRouter.post('/', async (request, response) => {
-  const { username, password } = request.body
+  const { email, password } = request.body
 
-  const user = await User.findOne({ username })
-  const passwordCorrect = user === null
+  const user = await User.findOne({ email })
+  const passwordCorrect = !user || !password
     ? false
     : await bcrypt.compare(password, user.passwordHash)
-
-  if (!(user && passwordCorrect)) {
+  if (!passwordCorrect) {
     return response.status(401).json({
-      error: 'usuario o contraseña invalido'
+      error: 'invalid email or password'
     })
   }
 
   const userForToken = {
-    username: user.username,
+    userName: user.userName,
     id: user._id
   }
 
   const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60 * 60 })
 
-  response
-    .status(200)
-    .send({ token, username: user.username, name: user.name })
+  response.json({ token, userName: user.username, email: user.email })
 })
 
 export default loginRouter

@@ -4,7 +4,7 @@ import usersRouter from './controllers/users.js'
 import tasksRouter from './controllers/tasks.js'
 import loginRouter from './controllers/login.js'
 import { MongoDBConnect } from './utils/config.js'
-import ErrorHandler from './middlewares/errorHandler.js'
+import errorHandler from './middlewares/errorHandler.js'
 
 MongoDBConnect()
 const app = express()
@@ -13,6 +13,8 @@ app.use(express.json())
 app.use('/api/login', loginRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/tasks', tasksRouter)
-app.use(ErrorHandler)
+app.use(errorHandler)
+// Status code 404, for unhandled routes
+app.use((req, res) => res.status(404).end())
 
 export default app

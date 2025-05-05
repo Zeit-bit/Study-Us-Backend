@@ -1,11 +1,17 @@
-const ErrorHandler = (error, req, res, next) => {
-  if (error.name === 'CastError') return res.status(400).send({ error: 'id malformado' })
-  if (error.name === 'ValidationError') return res.status(400).send({ error: error.message })
-  if (error.name === 'MongoServerError' && error.message.includes('E11000 duplicate key error')) return res.status(400).json({ error: 'correo ya en uso' })
-  if (error.name === 'JsonWebTokenError') return res.status(401).json({ error: 'token invalido' })
-  if (error.name === 'TokenExpiredError') return res.status(401).json({ error: 'token expirado' })
-  console.log(error)
-  next(error)
+const errorHandlers = {
+  CastError: (res) => res.status(400).json({ error: 'malformed id' }),
+  ValidationError: (res, { message }) => res.status(400).json({ error: message }),
+  JsonWebTokenError: (res) => res.status(401).json({ error: 'token missing or invalid' }),
+  TokenExpiredError: (res) => res.status(401).json({ error: 'token expired' }),
+  MongoServerError: (res) => res.status(400).json({ error: 'duplicate field in database' }),
+  defaultError: (res) => res.status(500).end()
 }
 
-export default ErrorHandler
+const errorHandler = (error, req, res, next) => {
+  console.log('***Error Handling***')
+  console.log(error.name)
+  const handler = errorHandlers[error.name] || errorHandlers.defaultError
+  handler(res, error)
+}
+
+export default errorHandler
