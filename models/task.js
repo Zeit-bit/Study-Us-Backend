@@ -3,6 +3,7 @@ import mongoose, { model, Schema } from 'mongoose'
 const taskSchema = new Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    date: { type: Date, default: new Date() },
     title: { type: String, required: true },
     description: { type: String, default: 'Sin descripción' },
     completed: { type: Boolean, default: false }
