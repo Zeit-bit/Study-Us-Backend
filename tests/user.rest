@@ -2,7 +2,8 @@
 GET http://localhost:3000/api/users
 
 ### Get all tasks of a user
-GET http://localhost:3000/api/users/6818f25524e36749ab713d27/tasks
+GET http://localhost:3000/api/users/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlBhdHJpY2lvIiwiaWQiOiI2ODE4ZjI1NTI0ZTM2NzQ5YWI3MTNkMjciLCJpYXQiOjE3NDY2MjkyNzcsImV4cCI6MTc0NjYzMDQ3N30.-wswAyD_-1gBubcuGLInfVrRtq_CZ5FkmByv31tymI8
 
 ### Post a new user
 POST http://localhost:3000/api/users
@@ -26,9 +27,27 @@ Content-Type: application/json
 ### Post a new task
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlBhdHJpY2lvIiwiaWQiOiI2ODE4ZjI1NTI0ZTM2NzQ5YWI3MTNkMjciLCJpYXQiOjE3NDY0ODM2ODksImV4cCI6MTc0NjQ4NzI4OX0.gsvSxEfVn5uXNCMwK2HdVIVM3oIKcQ0l3iI85H-USpc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlBhdHJpY2lvIiwiaWQiOiI2ODE4ZjI1NTI0ZTM2NzQ5YWI3MTNkMjciLCJpYXQiOjE3NDY2MjkyNzcsImV4cCI6MTc0NjYzMDQ3N30.-wswAyD_-1gBubcuGLInfVrRtq_CZ5FkmByv31tymI8
 
 {
-  "title": "Test 9",
+  "title": "Test 11",
   "description": "This is a description"
+}
+###
+DELETE http://localhost:3000/api/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlBhdHJpY2lvIiwiaWQiOiI2ODE4ZjI1NTI0ZTM2NzQ5YWI3MTNkMjciLCJpYXQiOjE3NDY2MjkyNzcsImV4cCI6MTc0NjYzMDQ3N30.-wswAyD_-1gBubcuGLInfVrRtq_CZ5FkmByv31tymI8
+
+{
+  "taskId": "68193ce0bd947def19df456f"
+}
+
+### Update completion state 
+PUT http://localhost:3000/api/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlBhdHJpY2lvIiwiaWQiOiI2ODE4ZjI1NTI0ZTM2NzQ5YWI3MTNkMjciLCJpYXQiOjE3NDY2MjkyNzcsImV4cCI6MTc0NjYzMDQ3N30.-wswAyD_-1gBubcuGLInfVrRtq_CZ5FkmByv31tymI8
+
+{
+  "taskId": "68193eca8a866aff5f44c931",
+  "completed": true
 }

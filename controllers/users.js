@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt'
 import { Router } from 'express'
 import User from '../models/user.js'
 import Task from '../models/task.js'
+import tokenExtraction from '../middlewares/tokenExtraction.js'
 
 const usersRouter = Router()
 
@@ -12,9 +13,8 @@ usersRouter.get('/', async (req, res) => {
 })
 
 // Get all tasks of a user
-usersRouter.get('/:id/tasks', async (req, res) => {
-  const user = await User.findById(req.params.id)
-  if (!user) return res.status(404).json({ error: 'invalid user id' })
+usersRouter.get('/tasks', tokenExtraction, async (req, res) => {
+  const user = await User.findById(req.userId)
   const tasks = await Task.find({ userId: user._id })
   res.json(tasks)
 })

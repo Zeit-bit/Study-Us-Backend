@@ -18,7 +18,7 @@ tasksRouter.get('/:id', async (req, res) => {
   res.status(200).json(task)
 })
 
-// Post a task
+// Post a user task
 tasksRouter.post('/', tokenExtraction, async (req, res) => {
   const { title, description, date } = req.body
   const user = await User.findById(req.userId)
@@ -30,6 +30,22 @@ tasksRouter.post('/', tokenExtraction, async (req, res) => {
   })
   const savedTask = await task.save()
   res.status(201).json(savedTask)
+})
+
+// Delete a user task
+tasksRouter.delete('/', tokenExtraction, async (req, res) => {
+  const { taskId } = req.body
+  const task = await Task.findByIdAndDelete(taskId)
+  if (!task) return res.status(404).json({ error: 'id not found' })
+  res.json({ success: 'task removed', id: task._id })
+})
+
+// Modify a task
+tasksRouter.put('/', tokenExtraction, async (req, res) => {
+  const { taskId, completed } = req.body
+  const task = await Task.findByIdAndUpdate(taskId, { completed }, { new: true })
+  if (!task) return res.status(404).json({ error: 'id not found' })
+  res.json(task)
 })
 
 export default tasksRouter

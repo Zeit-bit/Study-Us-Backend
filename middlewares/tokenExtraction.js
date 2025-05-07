@@ -10,8 +10,9 @@ const tokenExtraction = (req, res, next) => {
   let decodedToken = {}
   try {
     decodedToken = jwt.verify(token, process.env.SECRET)
-  } catch (err) {}
-  if (!decodedToken.id) return res.status(401).json({ error: 'token missing or invalid' })
+  } catch (err) {
+    next(err)
+  }
   req.userId = decodedToken.id
   next()
 }
