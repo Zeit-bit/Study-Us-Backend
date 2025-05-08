@@ -1,53 +1,35 @@
-### Get all users
-GET http://localhost:3000/api/users
-
-### Get all tasks of a user
-GET http://localhost:3000/api/users/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlBhdHJpY2lvIiwiaWQiOiI2ODE4ZjI1NTI0ZTM2NzQ5YWI3MTNkMjciLCJpYXQiOjE3NDY2MjkyNzcsImV4cCI6MTc0NjYzMDQ3N30.-wswAyD_-1gBubcuGLInfVrRtq_CZ5FkmByv31tymI8
-
-### Post a new user
-POST http://localhost:3000/api/users
+### Register a new user
+POST http://localhost:3000/api/users/register
 Content-Type: application/json
 
 {
-  "userName": "TestBoy",
-  "email": "pato@gmail.com",
-  "password": "12345"
+  "username": "TestBoy",
+  "email": "testboy@gmail.com",
+  "password": "1234" 
 }
-
-### Login as existing user
-POST http://localhost:3000/api/login
+### Login
+POST http://localhost:3000/api/users/login
 Content-Type: application/json
 
 {
-  "email": "pato@gmail.com",
-  "password": "1234"
+  "email": "testboy@gmail.com",
+  "password": "1234" 
 }
 
-### Post a new task
-POST http://localhost:3000/api/tasks
+### Create a new task
+POST http://localhost:3000/api/tasks/create
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlBhdHJpY2lvIiwiaWQiOiI2ODE4ZjI1NTI0ZTM2NzQ5YWI3MTNkMjciLCJpYXQiOjE3NDY2MjkyNzcsImV4cCI6MTc0NjYzMDQ3N30.-wswAyD_-1gBubcuGLInfVrRtq_CZ5FkmByv31tymI8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODFjMGYxYWEyYTA2YWI1NjUxYTFiMTYiLCJ1c2VybmFtZSI6IlRlc3RCb3kiLCJpYXQiOjE3NDY2Njk0NDcsImV4cCI6MTc0NjY3MzA0N30.vApaATakfCwTBCR1Q0KfdOPs-Lh0m0dlaOzBmrR5bKc
 
 {
-  "title": "Test 11",
-  "description": "This is a description"
-}
-###
-DELETE http://localhost:3000/api/tasks
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlBhdHJpY2lvIiwiaWQiOiI2ODE4ZjI1NTI0ZTM2NzQ5YWI3MTNkMjciLCJpYXQiOjE3NDY2MjkyNzcsImV4cCI6MTc0NjYzMDQ3N30.-wswAyD_-1gBubcuGLInfVrRtq_CZ5FkmByv31tymI8
-
-{
-  "taskId": "68193ce0bd947def19df456f"
+  "title": "Test 2",
+  "description": "Description of the test for task 2"
 }
 
-### Update completion state 
-PUT http://localhost:3000/api/tasks
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlBhdHJpY2lvIiwiaWQiOiI2ODE4ZjI1NTI0ZTM2NzQ5YWI3MTNkMjciLCJpYXQiOjE3NDY2MjkyNzcsImV4cCI6MTc0NjYzMDQ3N30.-wswAyD_-1gBubcuGLInfVrRtq_CZ5FkmByv31tymI8
+### Get all tasks of user
+GET http://localhost:3000/api/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODFjMGYxYWEyYTA2YWI1NjUxYTFiMTYiLCJ1c2VybmFtZSI6IlRlc3RCb3kiLCJpYXQiOjE3NDY2Njk0NDcsImV4cCI6MTc0NjY3MzA0N30.vApaATakfCwTBCR1Q0KfdOPs-Lh0m0dlaOzBmrR5bKc
 
-{
-  "taskId": "68193eca8a866aff5f44c931",
-  "completed": true
-}
+### Get details of one task
+GET http://localhost:3000/api/tasks/681c0ffba2a06ab5651a1b1a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODFjMGYxYWEyYTA2YWI1NjUxYTFiMTYiLCJ1c2VybmFtZSI6IlRlc3RCb3kiLCJpYXQiOjE3NDY2Njk0NDcsImV4cCI6MTc0NjY3MzA0N30.vApaATakfCwTBCR1Q0KfdOPs-Lh0m0dlaOzBmrR5bKc

@@ -1,51 +1,59 @@
 import { Router } from 'express'
+import jwtExtraction from '../middlewares/jwtExtraction.js'
 import Task from '../models/task.js'
-import User from '../models/user.js'
-import tokenExtraction from '../middlewares/tokenExtraction.js'
-
 const tasksRouter = Router()
 
-// Get all tasks
-tasksRouter.get('/', async (req, res) => {
-  const tasks = await Task.find({})
-  res.status(200).json(tasks)
+// GET - Retrieve all tasks from user (Protected)
+tasksRouter.get('/', jwtExtraction, async (request, response, next) => {
+  try {
+    const { userId } = request.token
+    const tasksInDB = await Task.find({ userId })
+    response.json(tasksInDB)
+  } catch (error) { next(error) }
 })
 
-// Get task by id
-tasksRouter.get('/:id', async (req, res) => {
-  const task = await Task.findById(req.params.id)
-  if (!task) return res.status(404).json({ error: 'Tarea no encontrada' })
-  res.status(200).json(task)
+// GET - Retrieve details of one task (Protected)
+tasksRouter.get('/:id', jwtExtraction, async (request, response, next) => {
+  try {
+    const taskId = request.params.id
+    const taskInDB = await Task.findById(taskId)
+    response.json(taskInDB)
+  } catch (error) { next(error) }
 })
 
-// Post a user task
-tasksRouter.post('/', tokenExtraction, async (req, res) => {
-  const { title, description, date } = req.body
-  const user = await User.findById(req.userId)
-  const task = new Task({
-    userId: user._id,
-    date,
-    title,
-    description
-  })
-  const savedTask = await task.save()
-  res.status(201).json(savedTask)
+// POST - Create a new task (Protected)
+tasksRouter.post('/create', jwtExtraction, async (request, response, next) => {
+  try {
+    const { title, description, date } = request.body
+    const { userId } = request.token
+    const newTask = new Task({
+      userId,
+      title,
+      description,
+      date
+    })
+    const newTaskInDB = await newTask.save()
+    response.json(newTaskInDB)
+  } catch (error) { next(error) }
 })
 
-// Delete a user task
-tasksRouter.delete('/', tokenExtraction, async (req, res) => {
-  const { taskId } = req.body
-  const task = await Task.findByIdAndDelete(taskId)
-  if (!task) return res.status(404).json({ error: 'id not found' })
-  res.json({ success: 'task removed', id: task._id })
+// PUT - Update task details (Protected)
+tasksRouter.put('/:id/update', jwtExtraction, async (request, response, next) => {
+  try {
+    const taskId = request.params.id
+    const updatedTask = request.body
+    const updatedTaskInDB = await Task.findByIdAndUpdate(taskId, { $set: updatedTask }, { new: true })
+    response.json(updatedTaskInDB)
+  } catch (error) { next(error) }
 })
 
-// Modify a task
-tasksRouter.put('/', tokenExtraction, async (req, res) => {
-  const { taskId, completed } = req.body
-  const task = await Task.findByIdAndUpdate(taskId, { completed }, { new: true })
-  if (!task) return res.status(404).json({ error: 'id not found' })
-  res.json(task)
+// DELETE - Delete a task (Protected)
+tasksRouter.delete('/:id/delete', jwtExtraction, async (request, response, next) => {
+  try {
+    const taskId = request.params.id
+    const responseFromDB = await Task.findByIdAndDelete(taskId)
+    response.json(responseFromDB)
+  } catch (error) { next(error) }
 })
 
 export default tasksRouter

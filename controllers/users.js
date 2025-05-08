@@ -1,42 +1,63 @@
-import bcrypt from 'bcrypt'
 import { Router } from 'express'
 import User from '../models/user.js'
-import Task from '../models/task.js'
-import tokenExtraction from '../middlewares/tokenExtraction.js'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import jwtExtraction from '../middlewares/jwtExtraction.js'
 
 const usersRouter = Router()
 
-// Get all users
-usersRouter.get('/', async (req, res) => {
-  const users = await User.find({})
-  res.json(users)
-})
-
-// Get all tasks of a user
-usersRouter.get('/tasks', tokenExtraction, async (req, res) => {
-  const user = await User.findById(req.userId)
-  const tasks = await Task.find({ userId: user._id })
-  res.json(tasks)
-})
-
-// Post a new user
-usersRouter.post('/', async (req, res, next) => {
+// POST - Register users
+usersRouter.post('/register', async (request, response, next) => {
   try {
-    const { userName, email, password } = req.body
-
-    if (!password) return res.json({ error: 'missing password' })
-
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(password, saltRounds)
-
-    const user = new User({
-      userName,
+    const { username, email, password } = request.body
+    const passwordHash = await bcrypt.hash(password, 10)
+    const userToRegister = new User({
+      username,
       email,
       passwordHash
     })
+    const userInDB = await userToRegister.save()
+    response.json(userInDB)
+  } catch (error) { next(error) }
+})
 
-    const savedUser = await user.save()
-    res.status(201).json(savedUser)
+// POST - Login users
+usersRouter.post('/login', async (request, response, next) => {
+  try {
+    const { email, password } = request.body
+    const userInDB = await User.findOne({ email })
+    const passwordCorrect = userInDB && password
+      ? await bcrypt.compare(password, userInDB.passwordHash)
+      : false
+
+    if (!passwordCorrect) return response.status(401).json({ error: 'invalid email or password' })
+
+    const tokenBeforeSigning = {
+      userId: userInDB._id,
+      username: userInDB.username
+    }
+
+    const token = jwt.sign(tokenBeforeSigning, process.env.SECRET, { expiresIn: 60 * 60 })
+    response.json({ token, username: userInDB.username, email: userInDB.email })
+  } catch (error) { next(error) }
+})
+
+// GET - View profile (Protected)
+usersRouter.get('/profile', jwtExtraction, async (request, response, next) => {
+  try {
+    const { userId } = request.token
+    const userInDB = await User.findById(userId)
+    response.json(userInDB)
+  } catch (error) { next(error) }
+})
+
+// PUT - Update profile data (Protected)
+usersRouter.put('/profile/update', jwtExtraction, async (request, response, next) => {
+  try {
+    const { userId } = request.token
+    const updatedUser = request.body
+    const updatedUserInDB = await User.findByIdAndUpdate(userId, updatedUser, { new: true })
+    response.json(updatedUserInDB)
   } catch (error) { next(error) }
 })
 
